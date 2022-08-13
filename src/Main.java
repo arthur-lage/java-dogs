@@ -6,6 +6,19 @@ public class Main {
     public static int option;
     public static ArrayList<Dog> dogs = new ArrayList<Dog>();
     public static Scanner scanner = new Scanner(System.in);
+    public static Dog askUserForDogInformation() {
+        System.out.print("Dog's name: ");
+        String dogName = scanner.nextLine();
+        System.out.print("Dog's age: ");
+        int dogAge = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Dog's color: ");
+        String dogColor = scanner.nextLine();
+        System.out.print("Dog's breed: ");
+        String dogBreed = scanner.nextLine();
+
+        return new Dog(dogName, dogAge, dogColor, dogBreed);
+    }
 
     public static void askUserForOption() {
         System.out.println("""
@@ -18,25 +31,53 @@ public class Main {
                 4- Exit""");
 
         option = scanner.nextInt();
+        scanner.nextLine();
+    }
+    public static void updateDog(ArrayList<Dog> dogsArray) {
+        for(int i = 0; i < dogsArray.size(); i++) {
+            System.out.println(i + "- " + dogsArray.get(i).getName());
+        }
+
+        int index;
+
+        do {
+            System.out.println("Select the dog you want to update (using the number on the left)");
+            index = scanner.nextInt();
+        } while (index < 0 || index > dogsArray.size() - 1);
+
+        scanner.nextLine();
+
+        Dog newDog = askUserForDogInformation();
+
+        dogsArray.set(index, newDog);
+
+        scanner.nextLine();
+    }
+
+    public static void deleteDog(ArrayList<Dog> dogsArray) {
+        for(int i = 0; i < dogsArray.size(); i++) {
+            System.out.println(i + "- " + dogsArray.get(i).getName());
+        }
+
+        System.out.println("Select the dog you want to delete (using the number on the left)");
+        int index = scanner.nextInt();
+
+        dogsArray.remove(index);
+
+        scanner.nextLine();
     }
     public static void addDog(ArrayList<Dog> dogsArray) {
-        System.out.print("Dog's name: ");
-        String dogName = scanner.nextLine();
-        System.out.print("Dog's age: ");
-        int dogAge = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Dog's color: ");
-        String dogColor = scanner.nextLine();
-        System.out.print("Dog's breed: ");
-        String dogBreed = scanner.nextLine();
-
-        Dog createdDog = new Dog(dogName, dogAge, dogColor, dogBreed);
+        Dog createdDog = askUserForDogInformation();
 
         dogsArray.add(createdDog);
     }
     public static void showDogs(ArrayList<Dog> dogsArray) {
-        for (Dog dog : dogsArray) {
-            System.out.println(dog.getDogInformation());
+        if(dogsArray.size() > 0) {
+            for (Dog dog : dogsArray) {
+                System.out.println(dog.getDogInformation());
+            }
+        } else {
+            System.out.println("You haven't created any dogs yet!");
         }
     }
     public static void main (String[] args) {
@@ -47,28 +88,30 @@ public class Main {
 
         addDog(dogs);
 
-        askUserForOption();
-
-        if(option == 0) {
-            showDogs(dogs);
-        }
-
-        if(option == 1) {
-            addDog(dogs);
+        do {
             askUserForOption();
-        }
 
-        if(option == 2) {
-            System.out.println("This option is not available yet!");
-        }
+            if(option == 0) {
+                showDogs(dogs);
+            }
 
-        if(option == 3) {
-            System.out.println("This option is not available yet!");
-        }
+            if(option == 1) {
+                addDog(dogs);
+                askUserForOption();
+            }
 
-        if(option == 4) {
-            System.out.println("Goodbye!");
-            return;
-        }
+            if(option == 2) {
+                deleteDog(dogs);
+            }
+
+            if(option == 3) {
+                updateDog(dogs);
+            }
+
+            if(option == 4) {
+                System.out.println("Goodbye!");
+                return;
+            }
+        } while (true);
     }
 }
